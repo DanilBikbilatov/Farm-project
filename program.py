@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import tkinter as tk
@@ -10,6 +10,7 @@ import Animal
 import Owner
 import numpy as np
 import random
+import os
 import matplotlib
 matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -17,13 +18,24 @@ from matplotlib.figure import Figure
 
 class MakeTable(Frame):
 
+    """Summary
+       Класс для отображения данных во время эксперимента.
+    """
+    
     def __init__(self, parent):
+        """Summary
+        
+        Создание шаблона для будущей таблицы
+        """
         Frame.__init__(self, parent)
         self.create_ui()
         parent.grid_rowconfigure(0, weight=1)
         parent.grid_columnconfigure(0, weight=1)
 
     def create_ui(self):
+        """Summary
+        Создаем таблицу и то, как в ней будут располагаться все данные
+        """
         treev = Treeview(self)
 
         treev['columns'] = ('Начало года', 'Конец года')
@@ -42,6 +54,14 @@ class MakeTable(Frame):
         self.grid_columnconfigure(0, weight=1)
 
     def load_table(self, dic, year):
+        """Summary
+            Во время эксперимента сюда будут подгружаться изменяемые данные в зависимости
+            от времени эксперимента
+        
+        Args:
+            dic : словарь, в котором хранятся типы животных со своими параметрами
+            year : год эксперимента 
+        """
         if year == 0:
             self.treeview.insert('', 'end', text="Молодые",
                                  values=(int(dic.get('y_amount')), int(dic.get('y_Oldamount'))))
@@ -60,7 +80,17 @@ class MakeTable(Frame):
             self.treeview.insert('', 'end', text="", values=('', ''))
 
 class Interface(tk.Frame):
-    """docstring for Experiment"""
+    """
+    Класс, в котором происходит сам эксперимент
+    
+    Attributes:
+        active_widjets (dict): кнопки с которыми можно взаимодействовать
+        arr_capital (list): Description 
+        cur_year (int): конкретный год эксперимента
+        diction (dict): словарик для хранения изменяемых данных
+        img : объект для подгрузки картинки на фон
+        used_btns (dict): словарь, в котором хранятся кнопки и их состояния
+    """
     diction = {}
     cur_year = 0
     active_widjets = {}
@@ -68,11 +98,18 @@ class Interface(tk.Frame):
     arr_capital = []
 
     def __init__(self, master=None):
+        """Summary
+        
+        Args:
+            master (None, optional): Description
+        """
         Frame.__init__(self, master)
         self.master = master
         self.gui()
 
     def gui(self):
+        """Summary
+        """
         self.master.title("Молочная ферма")
         self.pack(fill=BOTH, expand=True)
         self.center_window()
@@ -92,7 +129,8 @@ class Interface(tk.Frame):
 
 # обработчик кнопок
         def next_step_all():
-
+            """Summary
+            """
             if self.cur_year > 0:
                 self.used_btns['g_btn'].destroy()
 
@@ -100,13 +138,13 @@ class Interface(tk.Frame):
             self.active_widjets['lll2'].destroy()
 
             lll1 = tk.Label(text=str(int(self.diction.get('capital'))), fg='black',
-                            font='arial 15')
+                            font='arial 15', bg='white')
             self.active_widjets['lll1'] = lll1
             lll1.place(x=200, y=590)
 
             lll2 = tk.Label(text=str(self.cur_year) + ' / ' +
                             str(int(self.diction.get('contract_time'))), fg='black',
-                            font='arial 15')
+                            font='arial 15', bg='white')
             self.active_widjets['lll2'] = lll2
             lll2.place(x=320, y=630)
 
@@ -158,8 +196,16 @@ class Interface(tk.Frame):
 
 # изменение параметров
         def ch_params():
-
+            """Summary
+            """
             def show_scale(name_wid, wid, arr):
+                """Summary
+                
+                Args:
+                    name_wid (TYPE): Description
+                    wid (TYPE): Description
+                    arr (TYPE): Description
+                """
                 self.active_widjets.get(name_wid).destroy()
                 wid = tk.Scale(self, length=100, orient=HORIZONTAL, from_=arr[0],
                                to=arr[1], resolution=arr[2])
@@ -209,7 +255,8 @@ class Interface(tk.Frame):
                 s_btn.place(x=430, y=670, width=250, height=30)
 
         def show_res():
-
+            """Summary
+            """
             pointsx = []
             i = 0
             while i <= self.cur_year:
@@ -242,6 +289,11 @@ class Interface(tk.Frame):
             r_btn.place(x=380, y=670, width=300, height=30)
 # кнопка завершения
         def end_action(event):
+            """Summary
+            
+            Args:
+                event (TYPE): Description
+            """
             exit()
 
         q_btn = Button(self, text=u'Завершить')
@@ -252,24 +304,24 @@ class Interface(tk.Frame):
         panel_ch_param = tk.Frame(self, bg='white')
         panel_ch_param.place(x=700, y=10, width=490, height=400)
 
-        lab0 = tk.Label(text='Контракт', width=20, bg='lightgray', fg='black', font='arial 25')
+        lab0 = tk.Label(text='Контракт', width=20, bg='white', fg='black', font='arial 25')
         lab0.place(x=800, y=30)
 
-        lab1 = tk.Label(text='Срок контракта :', fg='black', font='arial 15')
+        lab1 = tk.Label(text='Срок контракта :', fg='black', font='arial 15', bg='white')
         lab1.place(x=750, y=90)
         scale_contract = tk.Scale(self, length=100, orient=HORIZONTAL, from_=3, to=5,
                                   resolution=1)
         self.active_widjets['scale_contract'] = scale_contract
         scale_contract.place(x=880, y=70)
 
-        lab2 = tk.Label(text='Цена корма :', fg='black', font='arial 15')
+        lab2 = tk.Label(text='Цена корма :', fg='black', font='arial 15', bg='white')
         lab2.place(x=750, y=130)
         scale_feedcost = tk.Scale(self, length=100, orient=HORIZONTAL, from_=1000, to=5000,
                                   resolution=100)
         self.active_widjets['scale_feedcost'] = scale_feedcost
         scale_feedcost.place(x=880, y=110)
 
-        lab3 = tk.Label(text='Сумма закупаемого корма :', fg='black', font='arial 15')
+        lab3 = tk.Label(text='Сумма закупаемого корма :', fg='black', font='arial 15', bg='white')
         lab3.place(x=750, y=170)
         scale_allfood = tk.Scale(self, length=100, orient=HORIZONTAL, from_=50000, to=150000,
                                  resolution=10000)
@@ -277,10 +329,10 @@ class Interface(tk.Frame):
         scale_allfood.place(x=1000, y=150)
 
         lab4 = tk.Label(text='Необходимо продать голов по цене за голову :', fg='black',
-                        font='arial 15')
+                        font='arial 15', bg='white')
         lab4.place(x=750, y=205)
 
-        lab5 = tk.Label(text='- молодых', fg='black', font='arial 15')
+        lab5 = tk.Label(text='- молодых', fg='black', font='arial 15', bg='white')
         lab5.place(x=780, y=250)
         scale_y_sell = tk.Scale(self, length=100, orient=HORIZONTAL, from_=10, to=50,
                                 resolution=5)
@@ -291,7 +343,7 @@ class Interface(tk.Frame):
         self.active_widjets['scale_y_cost'] = scale_y_cost
         scale_y_cost.place(x=1000, y=230)
 
-        lab6 = tk.Label(text='- взрослых', fg='black', font='arial 15')
+        lab6 = tk.Label(text='- взрослых', fg='black', font='arial 15', bg='white')
         lab6.place(x=780, y=290)
         scale_a_sell = tk.Scale(self, length=100, orient=HORIZONTAL, from_=10, to=50,
                                 resolution=5)
@@ -302,7 +354,7 @@ class Interface(tk.Frame):
         self.active_widjets['scale_a_cost'] = scale_a_cost
         scale_a_cost.place(x=1000, y=270)
 
-        lab7 = tk.Label(text='- старых', fg='black', font='arial 15')
+        lab7 = tk.Label(text='- старых', fg='black', font='arial 15', bg='white')
         lab7.place(x=780, y=330)
         scale_o_sell = tk.Scale(self, length=100, orient=HORIZONTAL, from_=10, to=50,
                                 resolution=5)
@@ -313,7 +365,7 @@ class Interface(tk.Frame):
         self.active_widjets['scale_o_cost'] = scale_o_cost
         scale_o_cost.place(x=1000, y=310)
 
-        lab8 = tk.Label(text='Неустойка :', fg='black', font='arial 15')
+        lab8 = tk.Label(text='Неустойка :', fg='black', font='arial 15', bg='white')
         lab8.place(x=750, y=370)
         scale_penalty = tk.Scale(self, length=100, orient=HORIZONTAL, from_=5000, to=9000,
                                  resolution=500)
@@ -327,18 +379,19 @@ class Interface(tk.Frame):
         table = MakeTable(self)
         table.place(x=10, y=420, width=680, height=156)
 
-        llab1 = tk.Label(text=' Текущий капитал :', fg='black', font='arial 15')
+        llab1 = tk.Label(text=' Текущий капитал :', fg='black', font='arial 15', bg='white')
         llab1.place(x=30, y=590)
 
-        llab2 = tk.Label(text=' Прошло лет / Общий срок контракта :', fg='black', font='arial 15')
+        llab2 = tk.Label(text=' Прошло лет / Общий срок контракта :', fg='black', font='arial 15', bg='white')
         llab2.place(x=30, y=630)
 
         def show_params():
-
+            """
+            """
             def put_in_right_place(name, widget, pointx, pointy, wid_name):
                 if '.!interface.!scale' in str(widget):
                     self.diction[name] = int(widget.get())
-                    wid = tk.Label(text=str(widget.get()), fg='black', font='arial 15')
+                    wid = tk.Label(text=str(widget.get()), fg='black', font='arial 15', bg='white')
                     widget.destroy()
                     self.active_widjets[wid_name] = wid
                     wid.place(x=pointx, y=pointy)
@@ -396,7 +449,7 @@ class Interface(tk.Frame):
                 self.diction['need_food'] = 0
 
                 lll1 = tk.Label(text=str(int(self.diction.get('capital'))),
-                                fg='black', font='arial 15')
+                                fg='black', font='arial 15', bg="white")
                 self.active_widjets['lll1'] = lll1
                 lll1.place(x=200, y=590)
 
@@ -404,7 +457,7 @@ class Interface(tk.Frame):
 
                 lll2 = tk.Label(text=str(self.cur_year) + ' / ' +
                                 str(int(self.diction.get('contract_time'))), fg='black',
-                                font='arial 15')
+                                font='arial 15', bg="white")
                 self.active_widjets['lll2'] = lll2
                 lll2.place(x=320, y=630)
 
@@ -454,35 +507,35 @@ class Interface(tk.Frame):
         panel_param = tk.Frame(self, bg='white')
         panel_param.place(x=700, y=420, width=490, height=290)
 
-        l11 = tk.Label(text='Начальные данные', width=20, bg='lightgray',
-                       fg='black', font='arial 25')
+        l11 = tk.Label(text='Начальные данные', width=20,
+                       fg='black', font='arial 25', bg='white')
         l11.place(x=800, y=440)
 
-        l22 = tk.Label(text='Капитал :', fg='black', font='arial 15')
+        l22 = tk.Label(text='Капитал :', fg='black', font='arial 15', bg='white')
         l22.place(x=750, y=510)
         scale_capital = tk.Scale(self, length=100, orient=HORIZONTAL, from_=50000,
                                  to=100000, resolution=5000)
         self.active_widjets['scale_capital'] = scale_capital
         scale_capital.place(x=880, y=490)
 
-        l33 = tk.Label(text='Количество голов  :', fg='black', font='arial 15')
+        l33 = tk.Label(text='Количество голов  :', fg='black', font='arial 15', bg='white')
         l33.place(x=750, y=550)
 
-        l44 = tk.Label(text='- молодых  ', fg='black', font='arial 15')
+        l44 = tk.Label(text='- молодых  ', fg='black', font='arial 15', bg='white')
         l44.place(x=870, y=570)
         scale_y_amount = tk.Scale(self, length=100, orient=HORIZONTAL, from_=30,
                                   to=60, resolution=5)
         self.active_widjets['scale_y_amount'] = scale_y_amount
         scale_y_amount.place(x=980, y=550)
 
-        l55 = tk.Label(text='- взрослых  ', fg='black', font='arial 15')
+        l55 = tk.Label(text='- взрослых  ', fg='black', font='arial 15', bg='white')
         l55.place(x=870, y=610)
         scale_a_amount = tk.Scale(self, length=100, orient=HORIZONTAL, from_=50,
                                   to=100, resolution=5)
         self.active_widjets['scale_a_amount'] = scale_a_amount
         scale_a_amount.place(x=980, y=590)
 
-        l66 = tk.Label(text='- старых  ', fg='black', font='arial 15')
+        l66 = tk.Label(text='- старых  ', fg='black', font='arial 15', bg='white')
         l66.place(x=870, y=650)
         scale_o_amount = tk.Scale(self, length=100, orient=HORIZONTAL, from_=20,
                                   to=70, resolution=5)
