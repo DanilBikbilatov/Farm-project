@@ -194,7 +194,6 @@ class Interface(tk.Frame):
                 self.used_btns['g_btn2'] = g_btn2
                 g_btn2.place(x=300, y=370, width=150, height=30)
 
-# изменение параметров
         def ch_params():
             """Summary
             Во время перехода на очередной шаг эксперимента есть возможность изменять параметры игры
