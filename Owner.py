@@ -1,6 +1,29 @@
 class Owner:
+    """Summary
+    Класс хозяина фермы, где хранятся данные о финансах
 
+    Attributes:
+        _young(int): количество молодых животных
+        _adult(int): количество зрелых животных
+        _old(int): количество старых животных
+        _young_cost(int): цена за голову молодых животных
+        _adult_cost(int): цена за голову зрелых животных
+        _old_cost(int): цена за голову старых животных
+        _young_sell(int): сколько нужно продать молодых животных
+        _adult_sell(int): сколько нужно продать зрелых животных
+        _old_sell(int): сколько нужно продать старых животных
+        _cap(int): сейчас у хозяина имеется капитала
+        _must_buyfood(int): нужно каждый год покупать корма для животных
+        _cur_years(int): количество лет до конца эксперимента
+        _cur_amounts(int): всего животных на данный момент
+        _year(int): текущий год
+        _penalty(int): штраф за неуплату по ферме
+
+    """
     def __init__(self, diction, year):
+        """Summary
+        Инициализация класса
+        """
         self._young = diction.get('y_amount')
         self._adult = diction.get('a_amount')
         self._old = diction.get('o_amount')
@@ -16,6 +39,9 @@ class Owner:
         self._penalty = diction.get('penalty')
 
     def check_penalty(self):
+        """Summary
+        Функция подсчета штрафа при продаже и покупке животных при просрочках
+        """
         _penalty = 0
         if self._young < self._young_sell:
             _penalty += (self._young_sell - self._young) * self._penalty
@@ -26,6 +52,9 @@ class Owner:
         return _penalty
 
     def sell(self):
+        """Summary
+        Функция подсчета капитала хозяина при продаже и покупке животных с учетом штрафных санкций
+        """
         if self._year == 0:
             capit = (self._cap - self._must_buyfood +
                      self._young_cost * self._young_sell + self._adult_cost * self._adult_sell +
@@ -39,6 +68,9 @@ class Owner:
         return capit
 
     def paying_capacity(self):
+        """Summary
+        Функция измерения финансового положения хозяина
+        """
         _flag = False
         _capit = self.sell()
         if _capit < 0: 

@@ -99,9 +99,7 @@ class Interface(tk.Frame):
 
     def __init__(self, master=None):
         """Summary
-        
-        Args:
-            master (None, optional): Description
+        Инициализация класса
         """
         Frame.__init__(self, master)
         self.master = master
@@ -109,6 +107,7 @@ class Interface(tk.Frame):
 
     def gui(self):
         """Summary
+        Отрисовка игрового поля с изображением фона и всеми кнопками
         """
         self.master.title("Молочная ферма")
         self.pack(fill=BOTH, expand=True)
@@ -130,6 +129,7 @@ class Interface(tk.Frame):
 # обработчик кнопок
         def next_step_all():
             """Summary
+            Переход на очередной шаг эксперимента
             """
             if self.cur_year > 0:
                 self.used_btns['g_btn'].destroy()
@@ -197,14 +197,15 @@ class Interface(tk.Frame):
 # изменение параметров
         def ch_params():
             """Summary
+            Во время перехода на очередной шаг эксперимента есть возможность изменять параметры игры
             """
             def show_scale(name_wid, wid, arr):
                 """Summary
-                
+                Отображение ползунка для изменения параметров
                 Args:
-                    name_wid (TYPE): Description
-                    wid (TYPE): Description
-                    arr (TYPE): Description
+                    name_wid : название виджета
+                    wid : позиционирование ползунка
+                    arr : массив с данными, которые хотим изменить
                 """
                 self.active_widjets.get(name_wid).destroy()
                 wid = tk.Scale(self, length=100, orient=HORIZONTAL, from_=arr[0],
@@ -256,6 +257,7 @@ class Interface(tk.Frame):
 
         def show_res():
             """Summary
+            Финальный шаг эксперимента, когда показыаем результат в виде диаграммы
             """
             pointsx = []
             i = 0
@@ -287,12 +289,12 @@ class Interface(tk.Frame):
             r_btn = Button(self, text=u'Попробовать заново', command=ch_params)
             self.used_btns['r_btn'] = r_btn
             r_btn.place(x=380, y=670, width=300, height=30)
-# кнопка завершения
+
         def end_action(event):
             """Summary
-            
+            кнопка завершения
             Args:
-                event (TYPE): Description
+                event (TYPE): событие завершения
             """
             exit()
 
@@ -387,8 +389,12 @@ class Interface(tk.Frame):
 
         def show_params():
             """
+            Демонстрация измененных параметров справа после изменения их пользователем
             """
             def put_in_right_place(name, widget, pointx, pointy, wid_name):
+                """
+                расстановка виджетов справа для работы с ними пользователей
+                """
                 if '.!interface.!scale' in str(widget):
                     self.diction[name] = int(widget.get())
                     wid = tk.Label(text=str(widget.get()), fg='black', font='arial 15', bg='white')
@@ -543,6 +549,9 @@ class Interface(tk.Frame):
         scale_o_amount.place(x=980, y=630)
 
     def center_window(self):
+        """
+        Отцентрирование окна с игрой
+        """
         width = 1200
         height = 720
         screen_w = self.master.winfo_screenwidth()
